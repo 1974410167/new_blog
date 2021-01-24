@@ -25,7 +25,7 @@ SECRET_KEY = 'f0l$h2^=mhnel2@zjc=l*&90bp+0286=u=%j^n!!b-os3+1!ql'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0","*"]
 
 
 # Application definition
@@ -44,9 +44,10 @@ INSTALLED_APPS = [
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://127.0.0.1:6379/0",
         "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "decode_responses":True
         }
     }
 }
