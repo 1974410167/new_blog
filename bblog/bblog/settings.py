@@ -37,9 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'mainapp',
     'rest_framework',
 ]
+
+# 定时任务，每天两点将浏览量持久化到数据库
+
+CRONJOBS = [
+    # 2：30 执行
+    ('30 2 * * *', 'mainapp.timer_task.Persistence'),
+]
+
 
 CACHES = {
     "default": {
@@ -47,7 +56,9 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "decode_responses":True
+            "decode_responses":True,
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+
         }
     }
 }
