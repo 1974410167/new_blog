@@ -1,12 +1,11 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from .serializers import PostSer
 from .models import Post
-from rest_framework import viewsets,mixins,generics
+from rest_framework import mixins,generics
 import time
 from django_redis import get_redis_connection
-# from django.db.models import ObjectDoesNotExist
-# from threading import Timer
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 CONN = get_redis_connection("default")
 
@@ -16,6 +15,7 @@ class PostView_List(mixins.ListModelMixin,
     queryset = Post.objects.all()
     serializer_class = PostSer
 
+    @method_decorator(cache_page(60*15))
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -31,6 +31,7 @@ class PostView_Retrieve(mixins.RetrieveModelMixin,
     queryset = Post.objects.all()
     serializer_class = PostSer
 
+    @method_decorator(cache_page(60*15))
     def get(self,request, *args, **kwargs):
         remote_addr = request.META.get("REMOTE_ADDR")
         current_year = time.localtime().tm_year
@@ -64,69 +65,6 @@ class PostView_Retrieve(mixins.RetrieveModelMixin,
         serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
-
-
-# def Persistence():
-#
-#     try:
-#         django_cache_post = CONN.hgetall("django_cache_post")
-#
-#         for key in django_cache_post:
-#
-#             str_key = str(key,encoding="utf-8")
-#
-#             obj_pageviews = CONN.pfcount(str_key)
-#
-#             try:
-#                 obj = Post.objects.get(id=str_key)
-#                 obj.pageviews = obj_pageviews
-#                 obj.save()
-#
-#             except ObjectDoesNotExist:
-#                 print("Either the blog or entry doesn't exist.")
-#
-#     except:
-#         print("django_cache_post doesn't exist.")
-#
-# Persistence()
-# print("Sss")
-# class TimerDataPersistence():
-#
-#     def get_current_time(self):
-#         return time.localtime().tm_hour
-#
-#     def Persistence(self):
-#         try:
-#             django_cache_post = CONN.hgetall("django_cache_post")
-#
-#             for key in django_cache_post:
-#
-#                 str_key = str(key,encoding="utf-8")
-#
-#                 obj_pageviews = CONN.pfcount(str_key)
-#
-#                 try:
-#                     obj = Post.objects.get(id=str_key)
-#                     obj.pageviews = obj_pageviews
-#                     obj.save()
-#
-#                 except ObjectDoesNotExist:
-#                     print("Either the blog or entry doesn't exist.")
-#
-#         except:
-#             print("django_cache_post doesn't exist.")
-#
-# def main():
-#
-#     obj_TimerDataPersistence = TimerDataPersistence()
-#     current_time = obj_TimerDataPersistence.get_current_time()
-#
-#     # 半夜两点进行持久化
-#     if current_time==2:
-#         obj_TimerDataPersistence.Persistence()
-#
-#
-# def start():
 
 
 
