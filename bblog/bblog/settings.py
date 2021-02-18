@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 CRONJOBS = [
     # 2：30 执行
     ('30 2 * * *', 'mainapp.timer_task.Persistence'),
+    ('*/1 * * * *', 'mainapp.timer_task.Persistence'),
+
 ]
 
 

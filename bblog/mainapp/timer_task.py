@@ -10,7 +10,6 @@ def Persistence():
         for key in django_cache_post:
 
             str_key = str(key,encoding="utf-8")
-
             obj_pageviews = CONN.pfcount(str_key)
 
             try:
@@ -23,4 +22,6 @@ def Persistence():
 
     except:
         print("django_cache_post doesn't exist.")
+
+
 

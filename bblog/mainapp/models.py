@@ -61,3 +61,19 @@ class Post(models.Model):
     def save(self,*args,**kwargs):
         self.modified_time = timezone.now()
         super().save(*args,**kwargs)
+
+class Comment(models.Model):
+
+    name = models.CharField('名字',max_length=20)
+    email = models.EmailField('邮箱',blank=True)
+    text = models.TextField('内容')
+    created_time = models.DateTimeField('创建时间',default=timezone.now)
+    post = models.ForeignKey(Post,verbose_name='文章',on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = '评论'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_time']
+
+    def __str__(self):
+        return f'{self.name}: {self.text[:20]}'
