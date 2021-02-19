@@ -1,6 +1,8 @@
 ### 技术栈
 - django
 - django restframework
+- mysql
+- redis
 - vue
 - nginx
 - gunicorn
