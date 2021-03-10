@@ -34,7 +34,7 @@ class Post(models.Model):
     body = models.TextField("正文")
 
     # 创建时间和修改时间
-    create_time = models.DateTimeField('创建时间',default=timezone.now)
+    create_time = models.DateTimeField('创建时间',default=timezone.now,db_index=True)
     modified_time = models.DateTimeField('修改时间')
 
     # 文章摘要
@@ -68,7 +68,7 @@ class Comment(models.Model):
     email = models.EmailField('邮箱',blank=True)
     text = models.TextField('内容')
     created_time = models.DateTimeField('创建时间',default=timezone.now)
-    post = models.ForeignKey(Post,verbose_name='文章',on_delete=models.CASCADE)
+    post = models.ForeignKey(Post,related_name='comments',verbose_name='文章',on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = '评论'
@@ -77,3 +77,23 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.name}: {self.text[:20]}'
+#  文字签名
+class Text_signature(models.Model):
+
+    text = models.CharField(max_length=100)
+    created_time = models.DateTimeField('创建时间',default=timezone.now)
+
+    class Meta:
+        verbose_name = '个性签名'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_time']
+
+class About_me(models.Model):
+
+    text = models.TextField("关于")
+    created_time = models.DateTimeField('创建时间',default=timezone.now)
+
+    class Meta:
+        verbose_name = '关于'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_time']

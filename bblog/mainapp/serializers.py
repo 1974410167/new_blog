@@ -1,33 +1,40 @@
-from collections import OrderedDict
-
 from rest_framework import serializers
-from .models import Comment,Post
+from .models import Post,Tag,Category,Comment,Text_signature,About_me
 
-from .models import Post,Tag,Category,Comment
-
-
-class PostSer(serializers.ModelSerializer):
-
-    category = serializers.CharField(source="category.name")
-    tags = serializers.CharField(source="tags.name")
+class SignSer(serializers.ModelSerializer):
 
     class Meta:
-        model = Post
-        fields = ["title","body","excerpt","category","tags","create_time","modified_time","pageviews"]
-        depth = 1
+        model = Text_signature
+        fields = ["text"]
 
+class AboutSer(serializers.ModelSerializer):
+
+    class Meta:
+        model = About_me
+        fields = ["text"]
 
 class TagSer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ["name",]
+        fields = ["id","name",]
+
+class PostSer(serializers.ModelSerializer):
+
+    category = serializers.CharField(source="category.name")
+    tags = TagSer(many=True,read_only=True)
+    comments = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = Post
+        fields = ["id","title","body","excerpt","category","tags","create_time","modified_time","pageviews",'comments']
+        depth = 1
 
 class CategorySer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ["name",]
+        fields = ["id","name",]
 
 
 class CommentSer(serializers.ModelSerializer):
@@ -55,7 +62,7 @@ class CommentSer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['name','email','text','post','created_time']
+        fields = ["id",'name','email','text','post','created_time']
         depth = 1
 
     def create(self, validated_data):
