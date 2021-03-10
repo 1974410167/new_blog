@@ -1,17 +1,18 @@
 ### 技术栈
+
 - django
 - django restframework
 - mysql
 - redis
 - vue
+  - vue-router
+  - vue-cli  
 - nginx
 - gunicorn
-- ajax
+- axios
 
 ### 当前进度
 
-后端基本开发完成....前端进度为0
+完毕
 
-### 计划
 
-剩余假期完成前端
